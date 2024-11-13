@@ -1,6 +1,5 @@
 import { MongoClient } from 'mongodb';
 
-import Cards from "../model/cards.js";
 const url = "mongodb://localhost:27017/";
 const nameDB = "cardsDB";
 const nameCollection = "cards";
@@ -30,12 +29,11 @@ export default class CardsController {
         let client;
         try {
             let cardReq = req.body;
-            const card = new Cards(cardReq.title, cardReq.body, cardReq.link);
 
             client = await MongoClient.connect(url);
             const dbo = client.db(nameDB);
 
-            await dbo.collection(nameCollection).insertOne(card).then(data => {
+            await dbo.collection(nameCollection).insertOne(cardReq).then(data => {
 
                 console.log("document insert");
 
