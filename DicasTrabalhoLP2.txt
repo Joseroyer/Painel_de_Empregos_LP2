@@ -1,0 +1,48 @@
+Conexão com Banco:
+const url = "mongodb://localhost:27017/";
+const nameDB = "cardsDB";
+const nameCollection = "cards";
+
+Exemplo de inserção no banco:
+{
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
+        "cargo": "Desenvolvedor Back-end",
+        "cidade": "Rio de Janeiro",
+        "estado": "RJ",
+        "requisito": "Experiência com C#",
+        "formacao": "Graduação em TI",
+        "conhecimentos": "['C#', 'CSS', 'HTML']",
+        "regime": "PJ",
+        "jornada": "40 horas/semana",
+        "remuneracao": 5
+}
+
+
+
+#Endpoint de Buscar: filtro pode ser: cargo, cidade,estado ou regime.
+http://localhost:8082/cards/buscar?filter=RJ
+
+
+#Endpoint de Gravar:
+http://localhost:8082/cards/cadastrarCards
+
+-> Exemplo de como mandar:
+Obs: Acho que seria bom mandar a imagem em base64, no exemplo uso url de um site.
+
+{
+    
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
+        "cargo": "Desenvolvedor Back-end",
+        "cidade": "Rio de Janeiro",
+        "estado": "RJ",
+        "requisito": "Experiência com Java",
+        "formacao": "Graduação em TI",
+        "conhecimentos": "['Java', 'CSS', 'HTML']",
+        "regime": "PJ",
+        "jornada": "45 horas/semana",
+        "remuneracao": 5000
+}
+
+
+#Endpoint de Listar Todos:
+http://localhost:8082/cards/listarCards
