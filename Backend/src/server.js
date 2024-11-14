@@ -13,6 +13,6 @@ app.use(express.json());
 
 app.use(cardsRouter);
 
-app.listen(8082, function () { console.log("servidor ativo") });
+app.listen(8082, function () { console.log("servidor ativo", "http://localhost:8082") });
 
 
