@@ -1,6 +1,7 @@
 import { MongoClient } from 'mongodb';
 
-const url = "mongodb://localhost:27017/";
+const url = "mongodb://admin:147147@localhost:27017/?authSource=admin";
+// const url = "mongodb://localhost:27017/";
 const nameDB = "cardsDB";
 const nameCollection = "cards";
 

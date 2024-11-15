@@ -1,33 +1,40 @@
-<!-- src/components/JobPanel.vue -->
 <template>
-    <v-container :style="{ backgroundColor: backgroundColor }">
-        <!-- Filtro de pesquisa -->
-        <v-text-field v-model="searchTerm" label="Pesquisar Cargo" class="mb-4" clearable dense />
-
+    <v-container class="fill-height d-flex flex-column justify-center align-center" style="padding: 40px;">
         <v-row>
-            <!-- Exibindo os JobCards filtrados -->
-            <v-col v-for="(job, index) in filteredJobs" :key="index" :cols="12" :md="12 / colsHorizontal">
-                <JobCard :job="job" />
+            <v-col
+                v-for="(item, index) in displayedItems"
+                :key="index"
+                :cols="12 / columns"
+            >
+                <JobCard
+                :job="{
+                        logo: item.logo,
+                        cargo: item.cargo,
+                        cidade: item.cidade,
+                        estado: item.estado,
+                        requisito: item.requisito,
+                        formacao: item.formacao,
+                        conhecimentos: item.conhecimentos,
+                        regime: item.regime,
+                        jornada: item.jornada,
+                        remuneracao: item.remuneracao,
+                    }" 
+                />
             </v-col>
         </v-row>
 
-        <!-- Navegação -->
-        <v-row class="mt-4" v-if="showPagination">
-            <v-btn @click="prevPage" :disabled="currentPage <= 1" icon>
-                <v-icon>mdi-chevron-left</v-icon>
-            </v-btn>
-            <v-btn @click="nextPage" :disabled="currentPage * rowsPerPage >= filteredJobs.length" icon>
-                <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-        </v-row>
-
-        <!-- Informações sobre a empresa -->
-        <slot name="companyInfo" />
+        <v-pagination
+            v-model="currentPage"
+            :length="totalPages"
+            :total-visible="5"
+            class="mt-4"
+        ></v-pagination>
     </v-container>
 </template>
 
 <script>
 import JobCard from './JobCard.vue';
+import axios from 'axios';
 
 export default {
     name: 'JobPanel',
@@ -35,49 +42,43 @@ export default {
         JobCard,
     },
     props: {
-        colsHorizontal: {
+        columns: {
             type: Number,
-            default: 5,
+            default: 3,
         },
-        rowsVertical: {
+        rowsPerPage: {
             type: Number,
-            default: 1,
-        },
-        backgroundColor: {
-            type: String,
-            default: '#fff',
-        },
-        jobsData: {
-            type: Array,
-            default: () => [],
+            default: 2,
         },
     },
     data() {
         return {
-            searchTerm: '',
+            jobs: [],
             currentPage: 1,
-            rowsPerPage: this.colsHorizontal * this.rowsVertical,
         };
     },
     computed: {
-        filteredJobs() {
-            return this.jobsData.filter((job) =>
-                job.cargo.toLowerCase().includes(this.searchTerm.toLowerCase())
-            );
+        itemsPerPage() {
+            return this.columns * this.rowsPerPage;
         },
-        showPagination() {
-            return this.filteredJobs.length > this.rowsPerPage;
+        totalPages() {
+            return Math.ceil(this.jobs.length / this.itemsPerPage);
+        },
+        displayedItems() {
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            return this.jobs.slice(start, start + this.itemsPerPage);
         },
     },
+    mounted() {
+        this.fetchJobs();
+    },
     methods: {
-        nextPage() {
-            if (this.currentPage * this.rowsPerPage < this.filteredJobs.length) {
-                this.currentPage++;
-            }
-        },
-        prevPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--;
+        async fetchJobs() {
+            try {
+                const response = await axios.get('http://localhost:8082/cards/buscar?filter=');
+                this.jobs = response.data;
+            } catch (error) {
+                console.error("Erro ao buscar os jobs:", error);
             }
         },
     },
@@ -85,7 +86,7 @@ export default {
 </script>
 
 <style scoped>
-.v-btn {
-    margin: 0 5px;
+.fill-height {
+    height: 100%;
 }
 </style>
