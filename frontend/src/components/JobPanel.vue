@@ -7,7 +7,7 @@
                 :cols="12 / columns"
             >
                 <JobCard
-                :job="{
+                    :job="{
                         logo: item.logo,
                         cargo: item.cargo,
                         cidade: item.cidade,
@@ -18,7 +18,7 @@
                         regime: item.regime,
                         jornada: item.jornada,
                         remuneracao: item.remuneracao,
-                    }" 
+                    }"
                 />
             </v-col>
         </v-row>
@@ -50,12 +50,24 @@ export default {
             type: Number,
             default: 2,
         },
+        filter: {
+            type: String,
+            default: '', 
+        },
     },
     data() {
         return {
             jobs: [],
             currentPage: 1,
         };
+    },
+    watch: {
+        filter: {
+            immediate: true,
+            handler(newFilter) {
+                this.fetchJobs(newFilter);
+            },
+        },
     },
     computed: {
         itemsPerPage() {
@@ -69,16 +81,13 @@ export default {
             return this.jobs.slice(start, start + this.itemsPerPage);
         },
     },
-    mounted() {
-        this.fetchJobs();
-    },
     methods: {
-        async fetchJobs() {
+        async fetchJobs(filter) {
             try {
-                const response = await axios.get('http://localhost:8082/cards/buscar?filter=');
+                const response = await axios.get(`http://localhost:8082/cards/buscar?filter=${filter}`);
                 this.jobs = response.data;
             } catch (error) {
-                console.error("Erro ao buscar os jobs:", error);
+                console.error('Erro ao buscar os jobs:', error);
             }
         },
     },
