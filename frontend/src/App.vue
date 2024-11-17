@@ -1,30 +1,51 @@
 <template>
     <v-app class="v-app">
-        <NavBar @update-filter="updateFilter" />
+        <NavBar
+            @update-filter="updateFilter"
+            @open-new-job-modal="toggleNewJobModal"
+        />
         <v-main>
-            <JobPanel :columns="3" :rowsPerPage="2" :filter="filter" />
+            <JobPanel   
+                ref="jobPanel"
+                :columns="3"
+                :rowsPerPage="2"
+                :filter="filter"
+            />
         </v-main>
+        <NewJobModal
+            v-model="isNewJobModalOpen"
+            @job-added="refreshJobs"
+        />
     </v-app>
 </template>
 
 <script>
 import NavBar from './components/Navbar.vue';
 import JobPanel from './components/JobPanel.vue';
+import NewJobModal from './components/NewJobModal.vue';
 
 export default {
     name: 'App',
     components: {
         NavBar,
         JobPanel,
+        NewJobModal,
     },
     data() {
         return {
-            filter: '', // Armazena o texto de filtro
+            filter: '',
+            isNewJobModalOpen: false,
         };
     },
     methods: {
         updateFilter(newFilter) {
-            this.filter = newFilter; // Atualiza o filtro com o texto do usuário
+            this.filter = newFilter;
+        },
+        toggleNewJobModal() {
+            this.isNewJobModalOpen = !this.isNewJobModalOpen;
+        },
+        refreshJobs() {
+            this.$refs.jobPanel.fetchJobs(this.filter);
         },
     },
 };

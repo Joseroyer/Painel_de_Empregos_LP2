@@ -22,15 +22,20 @@
         <v-btn icon @click="toggleTheme" class="mr-2">
             <v-icon>{{ isDark ? 'mdi-brightness-7' : 'mdi-brightness-4' }}</v-icon>
         </v-btn>
+
+        <v-btn @click="openNewJobModal">Novo</v-btn>
     </v-app-bar>
 </template>
 
 <script>
-import { useTheme } from 'vuetify/lib/framework.mjs';
 import { ref, watch } from 'vue';
+import { useTheme } from 'vuetify/lib/framework.mjs';
 
 export default {
     name: 'NavBar',
+    props: {
+        onNewJob: Function,
+    },
     setup(_, { emit }) {
         const theme = useTheme();
         const isDark = ref(theme.global.current.value.dark);
@@ -40,19 +45,24 @@ export default {
             theme.global.name.value = isDark.value ? 'light' : 'dark';
         };
 
+        const emitFilter = () => {
+            emit('update-filter', searchQuery.value);
+        };
+
+        const openNewJobModal = () => {
+            emit('open-new-job-modal');
+        };
+
         watch(() => theme.global.name.value, (newTheme) => {
             isDark.value = newTheme === 'dark';
         });
-
-        const emitFilter = () => {
-            emit('update-filter', searchQuery.value); // Emite o texto digitado
-        };
 
         return {
             isDark,
             toggleTheme,
             searchQuery,
             emitFilter,
+            openNewJobModal,
         };
     },
 };

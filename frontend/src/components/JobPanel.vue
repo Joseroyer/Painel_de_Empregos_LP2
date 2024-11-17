@@ -4,7 +4,7 @@
             <v-col
                 v-for="(item, index) in displayedItems"
                 :key="index"
-                :cols="12 / columns"
+                :cols=" 12 / columns"
             >
                 <JobCard
                     :job="{
@@ -93,9 +93,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.fill-height {
-    height: 100%;
-}
-</style>

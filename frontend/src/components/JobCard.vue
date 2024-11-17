@@ -54,6 +54,7 @@ export default {
     
     height: 240px;
     width: 100%;
+    min-width: 250px;
     transition: transform 0.8s;
     padding: 20px;
 
@@ -70,7 +71,7 @@ export default {
         height: 100%;
         display: flex;
         justify-content: left;
-        display: none;
+
     }
 }
 
